@@ -113,6 +113,11 @@ export class EnemyManager {
                 continue; // don't move while animating
             }
 
+            // Don't let enemies attack until they're fully visible on screen
+            const enemyBottomY = (enemy.row + 1) * cellSize - scrollOffset;
+            const isFullyVisible = enemyBottomY <= canvasHeight;
+            if (!isFullyVisible) continue;
+
             // Tick move timer
             enemy.moveTimer -= dt;
             if (enemy.moveTimer > 0) continue;
