@@ -8,22 +8,35 @@ function randomRange(min, max) {
 }
 
 function pickEnemyType(timeElapsed) {
-    const types = ['pawn'];
-    if (timeElapsed >= CONFIG.ENEMY_TIER_KNIGHT) types.push('knight');
-    if (timeElapsed >= CONFIG.ENEMY_TIER_BISHOP) types.push('bishop');
-    if (timeElapsed >= CONFIG.ENEMY_TIER_ROOK) types.push('rook');
-    if (timeElapsed >= CONFIG.ENEMY_TIER_QUEEN) types.push('queen');
+    // Build list of available piece types based on time
+    const available = [];
 
-    // Weight toward lower-tier pieces
-    // Pawns always have highest weight, newer types have lower weight
-    const weights = types.map((_, i) => Math.max(1, types.length - i));
-    const totalWeight = weights.reduce((a, b) => a + b, 0);
-    let r = Math.random() * totalWeight;
-    for (let i = 0; i < types.length; i++) {
-        r -= weights[i];
-        if (r <= 0) return types[i];
+    // Always include pawn (value 1)
+    available.push({ type: 'pawn', weight: 9 });
+
+    // Add other pieces when they unlock, weighted inversely by chess piece value:
+    // Pawn=1 (weight 9), Knight=3 (weight 3), Bishop=3 (weight 3), Rook=5 (weight 1.8), Queen=9 (weight 1)
+    if (timeElapsed >= CONFIG.ENEMY_TIER_KNIGHT) {
+        available.push({ type: 'knight', weight: 3 });
     }
-    return types[0];
+    if (timeElapsed >= CONFIG.ENEMY_TIER_BISHOP) {
+        available.push({ type: 'bishop', weight: 3 });
+    }
+    if (timeElapsed >= CONFIG.ENEMY_TIER_ROOK) {
+        available.push({ type: 'rook', weight: 1.8 });
+    }
+    if (timeElapsed >= CONFIG.ENEMY_TIER_QUEEN) {
+        available.push({ type: 'queen', weight: 1 });
+    }
+
+    // Weighted random selection
+    const totalWeight = available.reduce((sum, item) => sum + item.weight, 0);
+    let r = Math.random() * totalWeight;
+    for (const item of available) {
+        r -= item.weight;
+        if (r <= 0) return item.type;
+    }
+    return 'pawn';
 }
 
 export class EnemyManager {
