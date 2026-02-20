@@ -32,15 +32,27 @@ export class Renderer {
             this.drawValidMoves(ctx, player.validMoves, game.scrollOffset, cellSize);
         }
 
+        // During DYING state, player should be drawn under the capturing enemy
+        const isDying = game.state === GameState.DYING;
+
+        if (isDying) {
+            // Draw player first (underneath) with shrink/fade effect
+            const ppos = player.getDisplayPos();
+            const deathProgress = Math.min(1, game.dyingTimer / 0.45);
+            this.drawPiece(ctx, ppos.col, ppos.row, player.type, true, game.scrollOffset, cellSize, deathProgress);
+        }
+
         // Draw enemies
         for (const enemy of enemyManager.enemies) {
             const pos = enemyManager.getDisplayPos(enemy);
             this.drawPiece(ctx, pos.col, pos.row, enemy.type, false, game.scrollOffset, cellSize);
         }
 
-        // Draw player
-        const ppos = player.getDisplayPos();
-        this.drawPiece(ctx, ppos.col, ppos.row, player.type, true, game.scrollOffset, cellSize);
+        // Draw player on top if not dying
+        if (!isDying) {
+            const ppos = player.getDisplayPos();
+            this.drawPiece(ctx, ppos.col, ppos.row, player.type, true, game.scrollOffset, cellSize);
+        }
 
         // Draw HUD
         this.drawHUD(ctx, game, w);
@@ -90,7 +102,7 @@ export class Renderer {
         }
     }
 
-    drawPiece(ctx, col, row, type, isPlayer, scrollOffset, cellSize) {
+    drawPiece(ctx, col, row, type, isPlayer, scrollOffset, cellSize, deathProgress = 0) {
         const screenX = col * cellSize + cellSize / 2;
         const screenY = row * cellSize - scrollOffset + cellSize / 2;
 
@@ -101,24 +113,33 @@ export class Renderer {
         const symbol = isPlayer ? symbols.player : symbols.enemy;
         const fontSize = Math.floor(cellSize * CONFIG.PIECE_FONT_SIZE_RATIO);
 
+        // Apply death animation if dying (shrink and fade)
+        const scale = 1 - deathProgress * 0.5; // Shrink to 50%
+        const alpha = 1 - deathProgress * 0.7; // Fade to 30%
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+
         // Draw a subtle shadow/bg circle for readability
         if (isPlayer) {
             ctx.fillStyle = 'rgba(0, 100, 200, 0.35)';
             ctx.beginPath();
-            ctx.arc(screenX, screenY, cellSize * 0.4, 0, Math.PI * 2);
+            ctx.arc(screenX, screenY, cellSize * 0.4 * scale, 0, Math.PI * 2);
             ctx.fill();
         } else {
             ctx.fillStyle = 'rgba(200, 50, 50, 0.3)';
             ctx.beginPath();
-            ctx.arc(screenX, screenY, cellSize * 0.4, 0, Math.PI * 2);
+            ctx.arc(screenX, screenY, cellSize * 0.4 * scale, 0, Math.PI * 2);
             ctx.fill();
         }
 
-        ctx.font = `${fontSize}px serif`;
+        ctx.font = `${Math.floor(fontSize * scale)}px serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = isPlayer ? CONFIG.PLAYER_COLOR : CONFIG.ENEMY_COLOR;
         ctx.fillText(symbol, screenX, screenY + 2);
+
+        ctx.restore();
     }
 
     drawHUD(ctx, game, w) {
