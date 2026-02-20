@@ -52,8 +52,11 @@ function getAllPieces() {
 
 canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Scale click coordinates to match internal canvas size
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     if (game.state === GameState.MENU) {
         if (renderer.isButtonClick(x, y, GameState.MENU)) {
