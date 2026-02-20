@@ -22,7 +22,7 @@ export const CONFIG = {
     ENEMY_MOVE_INTERVAL_MAX: 4.0,
     ENEMY_MOVE_INTERVAL_REDUCE_RATE: 0.002,
     ENEMY_MOVE_INTERVAL_FLOOR: 1.0,
-    ENEMY_MAX_ON_SCREEN: 10, // reduced from 15 for better difficulty balance
+    ENEMY_MAX_ON_SCREEN: 5, // 50% reduction from 10 for better difficulty balance
 
     // Difficulty tiers
     ENEMY_TIER_PAWN: 3,
