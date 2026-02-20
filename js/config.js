@@ -15,21 +15,22 @@ export const CONFIG = {
     PLAYER_MOVE_DURATION: 0.15, // seconds for slide animation
 
     // Enemies
-    ENEMY_BASE_SPAWN_CHANCE: 0.15, // chance per cell on a new row
-    ENEMY_MAX_SPAWN_CHANCE: 0.45,
+    ENEMY_BASE_SPAWN_CHANCE: 0.12, // chance per cell on a new row (reduced from 0.15)
+    ENEMY_MAX_SPAWN_CHANCE: 0.35, // max spawn chance (reduced from 0.45)
     ENEMY_SPAWN_RAMP_TIME: 120, // seconds to reach max spawn chance
     ENEMY_MOVE_INTERVAL_MIN: 2.0, // seconds between enemy moves
     ENEMY_MOVE_INTERVAL_MAX: 4.0,
     ENEMY_MOVE_INTERVAL_REDUCE_RATE: 0.002, // reduce per second of game time
     ENEMY_MOVE_INTERVAL_FLOOR: 1.0,
-    ENEMY_MAX_ON_SCREEN: 20,
+    ENEMY_MAX_ON_SCREEN: 15, // max enemies on screen (reduced from 20)
 
     // Difficulty: time thresholds (seconds) for introducing piece types
-    ENEMY_TIER_PAWN: 0,
-    ENEMY_TIER_KNIGHT: 20,
-    ENEMY_TIER_BISHOP: 30,
-    ENEMY_TIER_ROOK: 50,
-    ENEMY_TIER_QUEEN: 80,
+    // Spread out more gradually for beginners
+    ENEMY_TIER_PAWN: 3, // first pawns appear at 3s (for easier testing/onboarding)
+    ENEMY_TIER_KNIGHT: 30, // knights at 30s (was 20s)
+    ENEMY_TIER_BISHOP: 50, // bishops at 50s (was 30s)
+    ENEMY_TIER_ROOK: 80, // rooks at 80s (was 50s)
+    ENEMY_TIER_QUEEN: 120, // queens at 2min (was 80s)
 
     // Colors
     LIGHT_SQUARE: '#f0d9b5',
