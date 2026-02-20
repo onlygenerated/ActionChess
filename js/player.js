@@ -25,6 +25,7 @@ export class Player {
         // Cached valid moves
         this.validMoves = [];
         this.showMoves = false;
+        this.captureTarget = null;
     }
 
     /**

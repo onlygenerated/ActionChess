@@ -79,10 +79,9 @@ canvas.addEventListener('click', (e) => {
     // Try to move player
     const result = player.tryMove(col, row);
     if (result.moved) {
-        if (result.captured) {
-            enemyManager.removeEnemyAt(result.captured.col, result.captured.row);
-        }
-        // Recompute valid moves after animation completes (handled in update)
+        // Store the intended capture target to check when animation completes
+        player.captureTarget = result.captured;
+        // Don't remove immediately — wait until animation completes to handle collision
     }
 });
 
@@ -126,7 +125,13 @@ function gameLoop(timestamp) {
         const wasAnimating = player.animating;
         player.update(dt);
         if (wasAnimating && !player.animating) {
-            // Animation just finished — recompute valid moves
+            // Animation just finished — check for capture
+            if (player.captureTarget) {
+                // Remove any enemy at the player's current position
+                enemyManager.removeEnemyAt(player.col, player.row);
+                player.captureTarget = null;
+            }
+            // Recompute valid moves
             player.computeValidMoves(getAllPieces());
             player.showMoves = true;
         }
