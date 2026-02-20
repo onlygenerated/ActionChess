@@ -7,7 +7,7 @@ export const CONFIG = {
     CELL_SIZE: 70,
 
     // Scroll
-    SCROLL_SPEED: 30, // pixels per second
+    SCROLL_SPEED: 45, // pixels per second (increased from 30 for testing)
 
     // Player
     PLAYER_START_COL: 3,
