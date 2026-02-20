@@ -70,6 +70,7 @@ export class EnemyManager {
                         isPlayer: false,
                         moveTimer: moveInterval * (0.5 + Math.random() * 0.5), // stagger initial
                         moveInterval,
+                        spawnRow: row, // remember where they spawned
                         // Animation
                         animating: false,
                         animProgress: 0,
@@ -113,10 +114,12 @@ export class EnemyManager {
                 continue; // don't move while animating
             }
 
-            // Don't let enemies attack until they're fully visible on screen
-            const enemyBottomY = (enemy.row + 1) * cellSize - scrollOffset;
-            const isFullyVisible = enemyBottomY <= canvasHeight;
-            if (!isFullyVisible) continue;
+            // Don't let enemies attack until their spawn row is fully visible on screen
+            // This prevents long-range pieces (bishop, rook, queen) from attacking
+            // from off-screen positions
+            const spawnBottomY = (enemy.spawnRow + 1) * cellSize - scrollOffset;
+            const spawnRowFullyVisible = spawnBottomY <= canvasHeight;
+            if (!spawnRowFullyVisible) continue;
 
             // Tick move timer
             enemy.moveTimer -= dt;
