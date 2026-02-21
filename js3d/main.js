@@ -58,6 +58,19 @@ const gameoverReason = document.getElementById('gameover-reason');
 const gameoverScore = document.getElementById('gameover-score');
 const gameoverHighScore = document.getElementById('gameover-highscore');
 
+// Add click handlers to overlays for menu/restart
+menuOverlay.addEventListener('click', () => {
+    if (game.state === GameState.MENU) {
+        startGame();
+    }
+});
+
+gameoverOverlay.addEventListener('click', () => {
+    if (game.state === GameState.GAME_OVER) {
+        startGame();
+    }
+});
+
 function getAllPieces() {
     const pieces = [];
     pieces.push({
