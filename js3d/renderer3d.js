@@ -14,6 +14,8 @@ export class Renderer3D {
         this.boardSquares = new Map(); // key: "col,row" -> mesh
         this.pieceMeshes = new Map(); // key: piece object -> mesh
         this.validMoveMeshes = [];
+        this.highlightedSquare = null; // For mobile tap-to-select UX
+        this.highlightMesh = null;
 
         // Create initial board grid
         this.initializeBoard();
@@ -77,6 +79,35 @@ export class Renderer3D {
             this.scene.remove(mesh);
         }
         this.validMoveMeshes = [];
+    }
+
+    setHighlightedSquare(square) {
+        // Remove old highlight
+        if (this.highlightMesh) {
+            this.scene.remove(this.highlightMesh);
+            this.highlightMesh = null;
+        }
+
+        this.highlightedSquare = square;
+
+        if (square) {
+            // Add new highlight - bright ring around selected square
+            const geometry = new THREE.RingGeometry(CONFIG.CELL_SIZE * 0.45, CONFIG.CELL_SIZE * 0.5, 32);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0xffff00, // Bright yellow
+                transparent: true,
+                opacity: 0.8,
+                side: THREE.DoubleSide
+            });
+            this.highlightMesh = new THREE.Mesh(geometry, material);
+
+            const x = (square.col - CONFIG.COLS / 2) * CONFIG.CELL_SIZE + CONFIG.CELL_SIZE / 2;
+            const z = -square.row * CONFIG.CELL_SIZE;
+            this.highlightMesh.position.set(x, 0.06, z); // Slightly above board
+            this.highlightMesh.rotation.x = -Math.PI / 2;
+
+            this.scene.add(this.highlightMesh);
+        }
     }
 
     drawValidMoves(moves, scrollOffset) {

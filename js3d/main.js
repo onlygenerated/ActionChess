@@ -47,6 +47,16 @@ const enemyManager = new EnemyManager();
 const renderer3d = new Renderer3D(scene, camera);
 
 let lastTime = 0;
+let selectedSquare = null; // For tap-to-select-then-confirm mobile UX
+
+// UI elements
+const hudScore = document.getElementById('score');
+const hudHighScore = document.getElementById('highscore');
+const menuOverlay = document.getElementById('menu-overlay');
+const gameoverOverlay = document.getElementById('gameover-overlay');
+const gameoverReason = document.getElementById('gameover-reason');
+const gameoverScore = document.getElementById('gameover-score');
+const gameoverHighScore = document.getElementById('gameover-highscore');
 
 function getAllPieces() {
     const pieces = [];
@@ -80,6 +90,7 @@ function startGame() {
 }
 
 // Input handling (raycasting for 3D click detection)
+// Mobile-friendly: tap to select, tap again to confirm
 function onPointerDown(event) {
     if (game.state === GameState.MENU) {
         startGame();
@@ -103,11 +114,40 @@ function onPointerDown(event) {
     raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
 
     const gridCol = renderer3d.raycastToGrid(raycaster);
-    if (gridCol === null) return;
+    if (gridCol === null) {
+        // Tapped empty space - clear selection
+        selectedSquare = null;
+        renderer3d.setHighlightedSquare(null);
+        return;
+    }
 
-    const result = player.tryMove(gridCol.col, gridCol.row);
-    if (result.moved) {
-        player.captureTarget = result.captured;
+    // Check if this is a valid move
+    const isValidMove = player.validMoves.some(
+        m => m.col === gridCol.col && m.row === gridCol.row
+    );
+
+    if (!isValidMove) {
+        // Invalid square - clear selection
+        selectedSquare = null;
+        renderer3d.setHighlightedSquare(null);
+        return;
+    }
+
+    // Check if tapping the same square again (confirm move)
+    if (selectedSquare &&
+        selectedSquare.col === gridCol.col &&
+        selectedSquare.row === gridCol.row) {
+        // Confirmed - execute the move
+        const result = player.tryMove(gridCol.col, gridCol.row);
+        if (result.moved) {
+            player.captureTarget = result.captured;
+            selectedSquare = null;
+            renderer3d.setHighlightedSquare(null);
+        }
+    } else {
+        // First tap - select this square
+        selectedSquare = { col: gridCol.col, row: gridCol.row };
+        renderer3d.setHighlightedSquare(selectedSquare);
     }
 }
 
@@ -169,11 +209,38 @@ function gameLoop(timestamp) {
         }
     }
 
+    // Update UI
+    updateUI();
+
     // Render 3D scene
     renderer3d.render(game, board, player, enemyManager);
     rendererGL.render(scene, camera);
 
     requestAnimationFrame(gameLoop);
+}
+
+function updateUI() {
+    // Update HUD
+    hudScore.textContent = game.score;
+    hudHighScore.textContent = game.highScore;
+
+    // Update overlays based on game state
+    if (game.state === GameState.MENU) {
+        menuOverlay.classList.remove('hidden');
+        gameoverOverlay.classList.add('hidden');
+    } else if (game.state === GameState.GAME_OVER) {
+        menuOverlay.classList.add('hidden');
+        gameoverOverlay.classList.remove('hidden');
+        gameoverReason.textContent = game.gameOverReason;
+        gameoverScore.textContent = `Score: ${game.score}`;
+        const isNewHighScore = game.score === game.highScore && game.score > 0;
+        gameoverHighScore.textContent = isNewHighScore
+            ? `🎉 New High Score! 🎉`
+            : `High Score: ${game.highScore}`;
+    } else {
+        menuOverlay.classList.add('hidden');
+        gameoverOverlay.classList.add('hidden');
+    }
 }
 
 // Handle window resize

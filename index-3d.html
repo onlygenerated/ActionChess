@@ -5,9 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Action Chess - 3D Perspective</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 10;
+        }
+        #menu-overlay, #gameover-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-family: Arial, sans-serif;
+            z-index: 20;
+        }
+        #menu-overlay h1, #gameover-overlay h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        #menu-overlay p, #gameover-overlay p {
+            font-size: 20px;
+            margin: 10px;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <div id="game-container"></div>
+
+    <!-- HUD Overlay -->
+    <div id="hud">
+        <div>Score: <span id="score">0</span></div>
+        <div>High Score: <span id="highscore">0</span></div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay">
+        <h1>Action Chess</h1>
+        <p>3D Perspective Edition</p>
+        <p style="margin-top: 30px; font-size: 24px;">Tap to Start</p>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div id="gameover-overlay" class="hidden">
+        <h1>Game Over</h1>
+        <p id="gameover-reason"></p>
+        <p id="gameover-score"></p>
+        <p id="gameover-highscore"></p>
+        <p style="margin-top: 30px; font-size: 24px;">Tap to Restart</p>
+    </div>
 
     <!-- Three.js from CDN -->
     <script type="importmap">

@@ -11,6 +11,7 @@ export const GameState = {
 
 export class Game {
     constructor() {
+        this.highScore = this.loadHighScore();
         this.reset();
     }
 
@@ -21,6 +22,26 @@ export class Game {
         this.timeElapsed = 0;
         this.gameOverReason = '';
         this.dyingTimer = 0;
+    }
+
+    loadHighScore() {
+        try {
+            const saved = localStorage.getItem('actionchess_highscore');
+            return saved ? parseInt(saved, 10) : 0;
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    saveHighScore() {
+        try {
+            if (this.score > this.highScore) {
+                this.highScore = this.score;
+                localStorage.setItem('actionchess_highscore', this.score.toString());
+            }
+        } catch (e) {
+            // localStorage might be disabled
+        }
     }
 
     start() {
@@ -76,5 +97,6 @@ export class Game {
     gameOver(reason) {
         this.state = GameState.GAME_OVER;
         this.gameOverReason = reason;
+        this.saveHighScore();
     }
 }
