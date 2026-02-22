@@ -58,17 +58,29 @@ const gameoverReason = document.getElementById('gameover-reason');
 const gameoverScore = document.getElementById('gameover-score');
 const gameoverHighScore = document.getElementById('gameover-highscore');
 
-// Add click handlers to overlays for menu/restart
-menuOverlay.addEventListener('click', () => {
+// Add click/touch handlers to overlays for menu/restart
+function handleMenuClick() {
     if (game.state === GameState.MENU) {
         startGame();
     }
-});
+}
 
-gameoverOverlay.addEventListener('click', () => {
+function handleGameOverClick() {
     if (game.state === GameState.GAME_OVER) {
         startGame();
     }
+}
+
+menuOverlay.addEventListener('click', handleMenuClick);
+menuOverlay.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleMenuClick();
+});
+
+gameoverOverlay.addEventListener('click', handleGameOverClick);
+gameoverOverlay.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    handleGameOverClick();
 });
 
 function getAllPieces() {
