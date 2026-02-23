@@ -7,7 +7,7 @@ export const CONFIG = {
     CELL_SIZE: 2, // World units (not pixels - this is 3D space)
 
     // Scroll (now means camera/world movement along Z-axis)
-    SCROLL_SPEED: 4.5, // units per second (scaled from 67.5 pixels to maintain feel)
+    SCROLL_SPEED: 1.5, // units per second (slow pace for playability)
 
     // Player
     PLAYER_START_COL: 3,
@@ -38,6 +38,13 @@ export const CONFIG = {
     VALID_CAPTURE_COLOR: 0xdc3c3c,
     PLAYER_COLOR: 0xffffff,
     ENEMY_COLOR: 0x1a1a1a,
+
+    // Board deformation
+    BOARD_CURVE_RADIUS: 0,        // Cylinder radius (larger = subtler curve, 0 = flat)
+    BOARD_WAVE_AMPLITUDE: 0.4,    // Wave height in world units
+    BOARD_WAVE_FREQUENCY: 0.3,    // Waves per world unit (along Z)
+    BOARD_WAVE_SPEED: 1.5,        // Wave animation speed
+    BOARD_TWIST_RATE: 0,          // Radians of twist per world unit of depth
 
     // Piece symbols (still used for text labels if needed)
     PIECE_SYMBOLS: {

@@ -8,21 +8,21 @@
 
 ## Concept
 
-An auto-scrolling survival chess game. You're a white king constantly moving up the board. Enemy pieces spawn ahead and move toward you. Click valid moves (highlighted in green/red) to dodge enemies or capture them. The board scrolls, enemies spawn faster, and their move intervals shrink over time. Survive as long as you can.
+An auto-scrolling survival chess game. You're a white queen constantly moving down the board. Enemy pieces spawn ahead and move toward you. Click valid moves (highlighted in green/red) to dodge enemies or capture them. The board scrolls, enemies spawn faster, and their move intervals shrink over time. Survive as long as you can.
 
-*One-sentence pitch:* An endless-runner chess game where you dodge and capture enemies using valid chess moves while the board auto-scrolls upward.
+*One-sentence pitch:* An endless-runner chess game where you dodge and capture enemies using valid chess moves while the board auto-scrolls forward.
 
 ---
 
 ## Core Mechanics
 
 **Auto-scrolling:**
-- Board scrolls up at 30 pixels/second (configurable)
+- Board scrolls forward (down the screen in 3D view) at configurable speed
 - Player starts 7 rows from the top of the visible area
-- If the player scrolls off the top edge → game over
+- If the player scrolls off the back edge → game over
 
 **Player:**
-- Plays as white king (♔)
+- Plays as white queen (♕) — chosen for maximum movement flexibility; player piece may become selectable later
 - Valid moves highlight on the board (green = empty, red = capture)
 - Click any highlighted square to move (smooth slide animation, 0.15s)
 - Valid moves recompute after each animation completes
@@ -43,7 +43,7 @@ An auto-scrolling survival chess game. You're a white king constantly moving up 
 - No win condition — it's an endless survival game
 - Score = seconds survived
 - Lose if:
-  - You scroll off the top
+  - You scroll off the back edge
   - An enemy captures you
 
 ---
@@ -74,7 +74,7 @@ An auto-scrolling survival chess game. You're a white king constantly moving up 
 ## What Has Been Built
 
 - ✅ Infinite scrolling chessboard (8 cols, 10 visible rows)
-- ✅ Player king with valid move highlighting
+- ✅ Player queen with valid move highlighting
 - ✅ Enemy spawning system with difficulty ramp (spawn chance + move speed)
 - ✅ Five enemy piece types with chess-accurate movement (pawn, knight, bishop, rook, queen)
 - ✅ Smooth slide animations for all piece movement
@@ -110,7 +110,7 @@ An auto-scrolling survival chess game. You're a white king constantly moving up 
 - "Can I get to safety before this rook closes the gap?"
 
 **Potential extensions:**
-- Different player pieces (queen, knight, etc.) with different movement patterns
+- Selectable player pieces (king, knight, etc.) with different movement patterns and difficulty
 - Special tiles (safe zones, teleporters, slow zones)
 - Power-ups (freeze enemies, extra move, invincibility)
 - Co-op mode (two players on the same board)

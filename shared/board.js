@@ -8,39 +8,44 @@ export class Board {
     }
 
     reset() {
-        // The highest row number that has been generated
-        // We start by generating enough rows to fill the visible area plus a buffer
-        const initialRows = CONFIG.VISIBLE_ROWS + 4;
+        const initialRows = CONFIG.VISIBLE_ROWS + 10;
         this.highestRow = initialRows - 1;
+        // Spawn frontier: enemies spawn 6 rows ahead of the visible bottom edge
+        // so they're already on the board when the camera reveals them
+        this.spawnFrontier = CONFIG.VISIBLE_ROWS + 6;
         this.lowestVisibleRow = 0;
     }
 
     /**
-     * Called each frame. Determines if new rows need generating based on scrollOffset.
-     * Returns an array of new row numbers that just appeared.
+     * Called each frame. Generates board rows ahead of the camera.
+     * Returns new row numbers for enemy spawning (6 rows ahead of visible bottom).
      */
     update(scrollOffset) {
         const cellSize = CONFIG.CELL_SIZE;
         const canvasHeight = CONFIG.VISIBLE_ROWS * cellSize;
 
-        // The bottom of the canvas in world-y is scrollOffset + canvasHeight.
-        // A row R has its top at R * cellSize.
-        // Row R is visible if R * cellSize < scrollOffset + canvasHeight
-        //   and (R + 1) * cellSize > scrollOffset.
-        // We need to ensure rows exist for anything near the bottom.
-        const bottomWorldY = scrollOffset + canvasHeight;
-        const neededRow = Math.floor(bottomWorldY / cellSize) + 1;
+        // Visible bottom row (furthest from player, top of 3D screen)
+        const visibleBottomRow = Math.floor((scrollOffset + canvasHeight) / cellSize);
 
-        const newRows = [];
+        // Generate board rows well ahead
+        const neededRow = visibleBottomRow + 12;
         while (this.highestRow < neededRow) {
             this.highestRow++;
-            newRows.push(this.highestRow);
+        }
+
+        // Spawn enemies 6 rows ahead of the visible bottom,
+        // so by the time they scroll into view they're already placed
+        const spawnTarget = visibleBottomRow + 6;
+        const newSpawnRows = [];
+        while (this.spawnFrontier < spawnTarget) {
+            this.spawnFrontier++;
+            newSpawnRows.push(this.spawnFrontier);
         }
 
         // Update lowest visible row (for cleanup)
         this.lowestVisibleRow = Math.floor(scrollOffset / cellSize);
 
-        return newRows;
+        return newSpawnRows;
     }
 
     /**

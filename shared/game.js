@@ -62,14 +62,16 @@ export class Game {
     }
 
     /**
-     * Check if the player has scrolled off the top.
+     * Check if the player has scrolled off the visible area.
      * @param {number} playerRow
      * @returns {boolean}
      */
     isPlayerOffScreen(playerRow) {
-        const screenY = playerRow * CONFIG.CELL_SIZE - this.scrollOffset;
-        // Player is off-screen if the bottom of their cell is above the canvas
-        return (screenY + CONFIG.CELL_SIZE) < 0;
+        const playerZ = playerRow * CONFIG.CELL_SIZE;
+        // Player is off-screen when the scroll has moved far enough past them.
+        // In 3D the camera is overhead, so the visible bottom extends ~5 cells
+        // behind the scroll position.
+        return (this.scrollOffset - playerZ) > CONFIG.CELL_SIZE * 3;
     }
 
     /**

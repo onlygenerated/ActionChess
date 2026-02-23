@@ -44,6 +44,68 @@
         .hidden {
             display: none !important;
         }
+
+        /* Unlock notification */
+        #unlock-notification {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffd700;
+            font-family: Arial, sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 2px 2px 4px rgba(0,0,0,0.8);
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #unlock-notification.unlock-flash {
+            opacity: 1;
+            animation: unlockPulse 0.4s ease-out;
+        }
+        @keyframes unlockPulse {
+            0% { transform: translateX(-50%) scale(1.4); opacity: 0; }
+            50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+            100% { transform: translateX(-50%) scale(1.0); opacity: 1; }
+        }
+
+        /* Score milestone flash */
+        .score-flash {
+            animation: scoreGold 0.6s ease-out;
+        }
+        @keyframes scoreGold {
+            0% { color: #ffd700; text-shadow: 0 0 15px rgba(255, 215, 0, 0.9), 2px 2px 4px rgba(0,0,0,0.8); }
+            100% { color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+        }
+
+        /* Board effect toggles */
+        #effect-toggles {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 30;
+        }
+        #effect-toggles button {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.5);
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        #effect-toggles button.active {
+            background: rgba(68,136,255,0.3);
+            border-color: rgba(68,136,255,0.7);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -60,6 +122,16 @@
         <h1>Action Chess</h1>
         <p>3D Perspective Edition</p>
         <p style="margin-top: 30px; font-size: 24px;">Tap to Start</p>
+    </div>
+
+    <!-- Unlock Notification -->
+    <div id="unlock-notification" class="hidden"></div>
+
+    <!-- Effect Toggles -->
+    <div id="effect-toggles">
+        <button id="toggle-curve">Curve</button>
+        <button id="toggle-wave" class="active">Wave</button>
+        <button id="toggle-twist">Twist</button>
     </div>
 
     <!-- Game Over Overlay -->
