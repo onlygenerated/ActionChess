@@ -94,9 +94,9 @@ export class Renderer3D {
         this.highlightMesh = null;
 
         // Camera offset from initial lookAt setup
-        this._cameraOffsetY = 28;  // Raised higher to see nearby squares better
-        this._cameraOffsetZ = 14;  // Pulled back significantly to fit all corners
-        this._lookAheadZ = -7;     // Look ahead closer (tilted down more)
+        this._cameraOffsetY = 30;  // Raised higher to see nearby squares better
+        this._cameraOffsetZ = 17;  // Pulled back significantly to fit all corners
+        this._lookAheadZ = -5;     // Look ahead closer (tilted down more)
 
         // Camera shake state
         this._shakeIntensity = 0;
