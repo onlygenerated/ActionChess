@@ -94,7 +94,7 @@ export class Renderer3D {
         this.highlightMesh = null;
 
         // Camera offset from initial lookAt setup (perpendicular view)
-        this._cameraOffsetY = 45;  // Height above board
+        this._cameraOffsetY = 35;  // Height above board
         this._cameraOffsetZ = -5;   // Distance ahead of player
         this._lookAheadZ = -10;    // Look ahead to show more board (negative = forward)
 
