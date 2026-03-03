@@ -94,9 +94,9 @@ export class Renderer3D {
         this.highlightMesh = null;
 
         // Camera offset from initial lookAt setup
-        this._cameraOffsetY = 30;  // Raised higher to see nearby squares better
-        this._cameraOffsetZ = 17;  // Pulled back significantly to fit all corners
-        this._lookAheadZ = -5;     // Look ahead closer (tilted down more)
+        this._cameraOffsetY = 40;  // Height above board
+        this._cameraOffsetZ = 15;  // Distance behind player
+        this._lookAheadZ = 0;      // Look at player position (no ahead/behind offset)
 
         // Camera shake state
         this._shakeIntensity = 0;
