@@ -95,8 +95,8 @@ export class Renderer3D {
 
         // Camera offset from initial lookAt setup (perpendicular view)
         this._cameraOffsetY = 45;  // Height above board
-        this._cameraOffsetZ = -20;   // Distance ahead of player
-        this._lookAheadZ = -20;    // Look ahead to show more board (negative = forward)
+        this._cameraOffsetZ = -10;   // Distance ahead of player
+        this._lookAheadZ = -10;    // Look ahead to show more board (negative = forward)
 
         // Camera shake state
         this._shakeIntensity = 0;
