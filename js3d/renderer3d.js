@@ -94,9 +94,9 @@ export class Renderer3D {
         this.highlightMesh = null;
 
         // Camera offset from initial lookAt setup
-        this._cameraOffsetY = 22;
-        this._cameraOffsetZ = 6;
-        this._lookAheadZ = -10;
+        this._cameraOffsetY = 24;  // Raised slightly to see nearby squares better
+        this._cameraOffsetZ = 8;   // Pulled back a bit to fit corners
+        this._lookAheadZ = -8;     // Tilted down slightly (look closer)
 
         // Camera shake state
         this._shakeIntensity = 0;
@@ -502,7 +502,7 @@ export class Renderer3D {
 
         // --- Board management ---
         const currentRow = Math.floor(scrollOffset / CONFIG.CELL_SIZE);
-        const maxRow = currentRow + CONFIG.VISIBLE_ROWS + 30;
+        const maxRow = currentRow + CONFIG.VISIBLE_ROWS + 27;  // Reduced from 30 to 27
         for (let row = currentRow; row < maxRow; row++) {
             this._createBoardRow(row);
         }

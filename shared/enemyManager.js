@@ -99,7 +99,7 @@ export class EnemyManager {
 
     /**
      * Update enemy timers and move them.
-     * Returns { playerCaptured: boolean } if an enemy moves onto the player.
+     * Returns { playerCaptured: boolean, capturingPiece: {type, color} } if an enemy moves onto the player.
      */
     update(dt, allPieces, playerPiece, scrollOffset) {
         const cellSize = CONFIG.CELL_SIZE;
@@ -113,6 +113,7 @@ export class EnemyManager {
         });
 
         let playerCaptured = false;
+        let capturingPiece = null;
 
         for (const enemy of this.enemies) {
             // Update animation
@@ -177,6 +178,7 @@ export class EnemyManager {
             // Check if this move captures the player
             if (chosenMove.col === playerPiece.col && chosenMove.row === playerPiece.row) {
                 playerCaptured = true;
+                capturingPiece = { type: enemy.type, color: 'enemy' };
             }
 
             // Start animation
@@ -188,7 +190,7 @@ export class EnemyManager {
             enemy.toRow = chosenMove.row;
         }
 
-        return { playerCaptured };
+        return { playerCaptured, capturingPiece };
     }
 
     /**

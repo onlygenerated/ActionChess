@@ -287,7 +287,8 @@ function gameLoop(timestamp) {
         const enemyResult = enemyManager.update(dt, getAllPieces(), effectivePlayer, game.scrollOffset);
         if (enemyResult.playerCaptured) {
             player.showMoves = false;
-            game.startDying('Captured by an enemy!');
+            const pieceName = enemyResult.capturingPiece ? enemyResult.capturingPiece.type : 'an enemy';
+            game.startDying(`Captured by ${pieceName}!`);
         }
 
         const wasAnimating = player.animating;
