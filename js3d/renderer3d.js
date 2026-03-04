@@ -130,6 +130,14 @@ export class Renderer3D {
         this._driftCurveRadius = 0;
         this._driftTwistRate = 0;
 
+        // Debug markers
+        this._debugMarkers = {
+            scrollOffset: null,
+            lookAt: null,
+            offScreenThreshold: null
+        };
+        this._createDebugMarkers();
+
         this.initializeBoard();
     }
 
@@ -213,6 +221,49 @@ export class Renderer3D {
         this._edgeGlowRight.rotation.x = -Math.PI / 2;
         this._edgeGlowRight.position.set(halfBoard + width / 2, 0.02, 0);
         this.scene.add(this._edgeGlowRight);
+    }
+
+    _createDebugMarkers() {
+        const boardWidth = CONFIG.COLS * CONFIG.CELL_SIZE;
+
+        // Scroll offset line (RED) - shows current scroll position
+        const scrollGeom = new THREE.PlaneGeometry(boardWidth, 0.3);
+        const scrollMat = new THREE.MeshBasicMaterial({
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.DoubleSide,
+        });
+        this._debugMarkers.scrollOffset = new THREE.Mesh(scrollGeom, scrollMat);
+        this._debugMarkers.scrollOffset.rotation.x = -Math.PI / 2;
+        this._debugMarkers.scrollOffset.position.y = 0.5;
+        this.scene.add(this._debugMarkers.scrollOffset);
+
+        // Camera lookAt line (GREEN) - shows where camera is looking
+        const lookAtGeom = new THREE.PlaneGeometry(boardWidth, 0.3);
+        const lookAtMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.DoubleSide,
+        });
+        this._debugMarkers.lookAt = new THREE.Mesh(lookAtGeom, lookAtMat);
+        this._debugMarkers.lookAt.rotation.x = -Math.PI / 2;
+        this._debugMarkers.lookAt.position.y = 0.5;
+        this.scene.add(this._debugMarkers.lookAt);
+
+        // Off-screen threshold line (YELLOW) - shows where player dies
+        const thresholdGeom = new THREE.PlaneGeometry(boardWidth, 0.3);
+        const thresholdMat = new THREE.MeshBasicMaterial({
+            color: 0xffff00,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.DoubleSide,
+        });
+        this._debugMarkers.offScreenThreshold = new THREE.Mesh(thresholdGeom, thresholdMat);
+        this._debugMarkers.offScreenThreshold.rotation.x = -Math.PI / 2;
+        this._debugMarkers.offScreenThreshold.position.y = 0.5;
+        this.scene.add(this._debugMarkers.offScreenThreshold);
     }
 
     reset() {
@@ -480,6 +531,18 @@ export class Renderer3D {
         this.camera.position.x = this._shakeOffsetX;
         this.camera.position.y += this._shakeOffsetY;
         this.camera.lookAt(this._shakeOffsetX * 0.3, 0, -scrollOffset + this._lookAheadZ);
+
+        // Update debug markers
+        if (this._debugMarkers.scrollOffset) {
+            // RED line: current scroll position
+            this._debugMarkers.scrollOffset.position.z = -scrollOffset;
+
+            // GREEN line: where camera is looking
+            this._debugMarkers.lookAt.position.z = -scrollOffset + this._lookAheadZ;
+
+            // YELLOW line: off-screen threshold (scroll - 1 cell)
+            this._debugMarkers.offScreenThreshold.position.z = -(scrollOffset - CONFIG.CELL_SIZE * 1);
+        }
 
         // --- Difficulty color shift (Tier 3: #10) ---
         const colorProgress = Math.min(1, game.timeElapsed / 120);
