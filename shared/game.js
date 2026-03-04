@@ -69,9 +69,8 @@ export class Game {
     isPlayerOffScreen(playerRow) {
         const playerZ = playerRow * CONFIG.CELL_SIZE;
         // Player is off-screen when the scroll has moved far enough past them.
-        // In 3D the camera is overhead, so the visible bottom extends ~5 cells
-        // behind the scroll position.
-        return (this.scrollOffset - playerZ) > CONFIG.CELL_SIZE * 3;
+        // With top-down camera view, trigger earlier when player falls behind.
+        return (this.scrollOffset - playerZ) > CONFIG.CELL_SIZE * 1;
     }
 
     /**
