@@ -202,17 +202,8 @@ function checkMilestones(timeElapsed) {
 }
 
 // Input handling (raycasting for 3D click detection)
+// Menu/game-over clicks are handled by overlay event listeners above.
 function onPointerDown(event) {
-    if (game.state === GameState.MENU) {
-        startGame();
-        return;
-    }
-
-    if (game.state === GameState.GAME_OVER) {
-        startGame();
-        return;
-    }
-
     if (game.state !== GameState.PLAYING) return;
     if (player.animating) return;
 
