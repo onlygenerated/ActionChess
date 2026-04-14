@@ -55,20 +55,13 @@ ActionChess/
 
 ## Next Steps (TODO)
 
-- [ ] Add HUD overlay (score, time) — either Canvas 2D overlay or DOM elements
-- [ ] Menu and game over screens
-- [ ] Curved board surface (cylinder geometry or custom mesh)
-- [ ] Better piece models (import GLB/GLTF or procedural shapes)
 - [ ] Touch controls for mobile (tap to move)
-- [ ] Particle effects for captures/deaths
 - [ ] Sound effects
 
 ---
 
 ## Known Issues
 
-- No HUD/menu screens yet (game starts immediately)
-- Pieces are simple cylinders (placeholder geometry)
 - Board is flat (curved road planned)
 
 ---

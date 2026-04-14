@@ -26,6 +26,7 @@ export class Player {
         this.validMoves = [];
         this.showMoves = false;
         this.captureTarget = null;
+        this._lastMoveRefresh = 0;
     }
 
     /**

@@ -66,6 +66,7 @@ const particles = new ParticleSystem(scene);
 
 let lastTime = 0;
 let selectedSquare = null;
+const _raycaster = new THREE.Raycaster();
 
 // Track state for visual events
 let _deathShakeTriggered = false;
@@ -219,10 +220,9 @@ function onPointerDown(event) {
     const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+    _raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
 
-    const gridCol = renderer3d.raycastToGrid(raycaster);
+    const gridCol = renderer3d.raycastToGrid(_raycaster);
     if (gridCol === null) {
         selectedSquare = null;
         renderer3d.setHighlightedSquare(null);
@@ -250,15 +250,6 @@ function onPointerDown(event) {
 
 window.addEventListener('pointerdown', onPointerDown);
 
-// Build a set of enemy identity keys for capture detection
-function getEnemyKeySet() {
-    const keys = new Set();
-    for (const e of enemyManager.enemies) {
-        keys.add(`${e.col},${e.row}`);
-    }
-    return keys;
-}
-
 // Game loop
 function gameLoop(timestamp) {
     const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.1) : 0;
@@ -276,9 +267,6 @@ function gameLoop(timestamp) {
         if (newRows.length > 0) {
             enemyManager.spawnOnNewRows(newRows, game.timeElapsed, player.col, player.row);
         }
-
-        // Snapshot enemy set before update (for capture particle detection)
-        const enemiesBefore = getEnemyKeySet();
 
         const effectivePlayer = {
             col: player.animating ? player.toCol : player.col,
