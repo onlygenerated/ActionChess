@@ -1,6 +1,9 @@
 // 3D-specific config (adapted from 2D config)
 
 export const CONFIG = {
+    // Debug
+    DEBUG: false,
+
     // Board dimensions
     COLS: 8,
     VISIBLE_ROWS: 10,

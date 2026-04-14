@@ -130,13 +130,15 @@ export class Renderer3D {
         this._driftCurveRadius = 0;
         this._driftTwistRate = 0;
 
-        // Debug markers
+        // Debug markers (only created when CONFIG.DEBUG is true)
         this._debugMarkers = {
             scrollOffset: null,
             lookAt: null,
             offScreenThreshold: null
         };
-        this._createDebugMarkers();
+        if (CONFIG.DEBUG) {
+            this._createDebugMarkers();
+        }
 
         this.initializeBoard();
     }
