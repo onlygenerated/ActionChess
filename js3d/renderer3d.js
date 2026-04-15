@@ -300,6 +300,7 @@ export class Renderer3D {
             // Store flat base position for deformation (vertices set in render loop)
             square._baseX = x;
             square._baseZ = z;
+            square.frustumCulled = false; // deformation moves vertices outside bounding boxes
 
             this.scene.add(square);
             this.boardSquares.set(key, square);
