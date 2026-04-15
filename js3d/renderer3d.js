@@ -272,6 +272,18 @@ export class Renderer3D {
         this._hideAllTrails();
         this._spawnTimes.clear();
         this._shakeIntensity = 0;
+
+        // Clear all board squares so the next game starts from row 0 with no gaps.
+        // Without this, boardMinRow stays at the old game's value, causing rows
+        // created during the new game (0–N) to coexist with a stale boardMinRow
+        // that skips culling and leaves a missing-square gap in the middle.
+        for (const mesh of this.boardSquares.values()) {
+            this.scene.remove(mesh);
+            this._geometryPool.push(mesh.geometry);
+        }
+        this.boardSquares.clear();
+        this.boardMinRow = 0;
+        this.initializeBoard();
     }
 
     initializeBoard() {
