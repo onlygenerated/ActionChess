@@ -40,8 +40,10 @@ function getPieceAt(col, row, occupancy) {
  * @param {object} playerPiece - the player piece (so enemies know where player is)
  * @returns {Array<{col, row, isCapture}>}
  */
-export function getValidMoves(type, col, row, isPlayer, allPieces, playerPiece) {
-    const occupancy = buildOccupancyMap(allPieces);
+export { buildOccupancyMap };
+
+export function getValidMoves(type, col, row, isPlayer, allPieces, playerPiece, occupancy) {
+    if (!occupancy) occupancy = buildOccupancyMap(allPieces);
     const moves = [];
 
     function addSliding(directions) {

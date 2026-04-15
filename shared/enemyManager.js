@@ -1,7 +1,7 @@
 // Enemy spawning, timer-based movement, AI
 
 import { CONFIG } from './config.js';
-import { getValidMoves } from './pieces.js';
+import { getValidMoves, buildOccupancyMap } from './pieces.js';
 
 function randomRange(min, max) {
     return min + Math.random() * (max - min);
@@ -42,10 +42,12 @@ function pickEnemyType(timeElapsed) {
 export class EnemyManager {
     constructor() {
         this.enemies = [];
+        this._nextId = 0;
     }
 
     reset() {
         this.enemies = [];
+        this._nextId = 0;
     }
 
     /**
@@ -77,6 +79,7 @@ export class EnemyManager {
                             CONFIG.ENEMY_MOVE_INTERVAL_MAX - timeElapsed * CONFIG.ENEMY_MOVE_INTERVAL_REDUCE_RATE)
                     );
                     this.enemies.push({
+                        id: this._nextId++,
                         type,
                         col,
                         row,
@@ -112,6 +115,9 @@ export class EnemyManager {
             return screenY + cellSize > -cellSize; // small buffer
         });
 
+        // Build occupancy map once for all enemy move calculations
+        const occupancy = buildOccupancyMap(allPieces);
+
         let playerCaptured = false;
         let capturingPiece = null;
 
@@ -142,8 +148,8 @@ export class EnemyManager {
             // Reset timer
             enemy.moveTimer = enemy.moveInterval;
 
-            // Get valid moves
-            const moves = getValidMoves(enemy.type, enemy.col, enemy.row, false, allPieces, playerPiece);
+            // Get valid moves (reuse pre-built occupancy map)
+            const moves = getValidMoves(enemy.type, enemy.col, enemy.row, false, allPieces, playerPiece, occupancy);
             if (moves.length === 0) continue;
 
             // AI: prefer moves toward the player, with some randomness

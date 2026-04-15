@@ -300,7 +300,6 @@ export class Renderer3D {
             // Store flat base position for deformation (vertices set in render loop)
             square._baseX = x;
             square._baseZ = z;
-            square.frustumCulled = false;
 
             this.scene.add(square);
             this.boardSquares.set(key, square);
@@ -502,8 +501,7 @@ export class Renderer3D {
     // --- Spawn animation helpers ---
 
     _getEnemyKey(enemy) {
-        // Use spawn position + type as identity key (stable across frames)
-        return `${enemy.spawnRow}_${enemy.col}_${enemy.type}`;
+        return `enemy_${enemy.id}`;
     }
 
     _getSpawnScale(enemy) {
